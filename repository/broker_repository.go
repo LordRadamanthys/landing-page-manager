@@ -1,4 +1,4 @@
-package broker_repository
+package repository
 
 import (
 	"context"
@@ -11,16 +11,24 @@ import (
 )
 
 var (
-	landingPageCollection = db.GetConnection().Database("db_landing_page").Collection("lp_collection")
+	BrokerRepository brokerRepositoryInterface = &brokerRepository{}
 )
 
-func InsertBroker(idLP string, broker brokers.Brokers) {
+type brokerRepository struct{}
+
+type brokerRepositoryInterface interface {
+	InsertBroker(string, brokers.Brokers)
+	Update(string, brokers.Brokers)
+	GetAllTemplates(string)
+}
+
+func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) {
 	id, err := primitive.ObjectIDFromHex(idLP)
 	if err != nil {
 		panic(err)
 	}
 	update := bson.M{"$push": bson.M{"brokerslist": broker}}
-	result, err := landingPageCollection.UpdateByID(context.TODO(), id, update)
+	result, err := db.GetLandingPageCollection().UpdateByID(context.TODO(), id, update)
 	if err != nil {
 		panic(err)
 	}
@@ -31,11 +39,11 @@ func InsertBroker(idLP string, broker brokers.Brokers) {
 	fmt.Println(result.MatchedCount)
 }
 
-func Update(idLP string, broker brokers.Brokers) {
+func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) {
 	idHex, _ := primitive.ObjectIDFromHex(idLP)
 	filter := bson.M{"_id": idHex, "brokerslist.id": broker.Id}
 	update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
-	result, err := landingPageCollection.UpdateOne(context.TODO(), filter, update)
+	result, err := db.GetLandingPageCollection().UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		panic(err)
 	}
@@ -43,10 +51,10 @@ func Update(idLP string, broker brokers.Brokers) {
 	fmt.Println(result)
 }
 
-func GetAllTemplates(id string) {
+func (br *brokerRepository) GetAllTemplates(id string) {
 	filter := bson.M{"brokerslist.id": id}
 	// update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
-	cursor, err := landingPageCollection.Find(context.TODO(), filter)
+	cursor, err := db.GetLandingPageCollection().Find(context.TODO(), filter)
 	if err != nil {
 		panic(err)
 	}
