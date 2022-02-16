@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
+	"github.com/LordRadamanthys/landing-page-manager/domain/template"
 	"github.com/LordRadamanthys/landing-page-manager/repository"
 )
 
@@ -14,7 +15,7 @@ type brokerInterface interface {
 	Insert(string, brokers.Brokers)
 	Update(string, brokers.Brokers)
 	Get(string, string)
-	GetTemplates(id string)
+	GetTemplates(id string) *[]template.Template
 }
 
 func (b *brokerService) Insert(idLandiPage string, broker brokers.Brokers) {
@@ -29,6 +30,6 @@ func (b *brokerService) Get(idLandiPage string, idBroker string) {
 
 }
 
-func (b *brokerService) GetTemplates(id string) {
-	repository.BrokerRepository.GetAllTemplates(id)
+func (b *brokerService) GetTemplates(id string) *[]template.Template {
+	return repository.BrokerRepository.GetAllTemplates(id)
 }

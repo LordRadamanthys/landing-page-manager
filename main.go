@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/LordRadamanthys/landing-page-manager/services"
+	"github.com/LordRadamanthys/landing-page-manager/app"
 	// "github.com/LordRadamanthys/landing-page-manager/domain/landing_page"
 	// "github.com/LordRadamanthys/landing-page-manager/domain/landing_page"
 )
 
 func main() {
+	app.StartApplication()
 	// broker := brokers.Brokers{
 
 	// 	Id:                       "1",
@@ -28,5 +29,5 @@ func main() {
 	// }
 
 	// services.LandingPageService.Update(lp)
-	services.BrokerService.GetTemplates("1")
+	// services.BrokerService.GetTemplates("1")
 }
