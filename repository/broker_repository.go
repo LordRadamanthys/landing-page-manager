@@ -6,6 +6,7 @@ import (
 
 	"github.com/LordRadamanthys/landing-page-manager/db"
 	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
+	"github.com/LordRadamanthys/landing-page-manager/domain/template"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -19,7 +20,7 @@ type brokerRepository struct{}
 type brokerRepositoryInterface interface {
 	InsertBroker(string, brokers.Brokers)
 	Update(string, brokers.Brokers)
-	GetAllTemplates(string)
+	GetAllTemplates(string) *[]template.Template
 }
 
 func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) {
@@ -51,24 +52,23 @@ func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) {
 	fmt.Println(result)
 }
 
-func (br *brokerRepository) GetAllTemplates(id string) {
+func (br *brokerRepository) GetAllTemplates(id string) *[]template.Template {
 	filter := bson.M{"brokerslist.id": id}
 	// update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
 	cursor, err := db.GetLandingPageCollection().Find(context.TODO(), filter)
 	if err != nil {
 		panic(err)
 	}
-	// convert the cursor result to bson
-	var results []bson.M
+
+	var obj []template.Template
 	// check for errors in the conversion
-	if err = cursor.All(context.TODO(), &results); err != nil {
+	if err = cursor.All(context.TODO(), &obj); err != nil {
 		panic(err)
 	}
+	for _, result := range obj {
 
-	// display the documents retrieved
-	fmt.Println("displaying all results from the search query")
-	for _, result := range results {
 		fmt.Println(result)
 	}
+	return &obj
 	// fmt.Println(result)
 }
