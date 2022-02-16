@@ -1,7 +1,7 @@
 package brokers
 
 type Brokers struct {
-	Id                       string `json:"id"`
+	Id_broker                int    `json:"id_broker"`
 	Name                     string `json:"name"`
 	Field_broker_title       string `json:"fieldBrokerTitle"`
 	Field_broker_description string `json:"fieldBrokerDescription"`
