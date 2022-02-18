@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/LordRadamanthys/landing-page-manager/db"
+	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
 	"github.com/LordRadamanthys/landing-page-manager/domain/landing_page"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,20 +18,22 @@ var (
 type landingPageRepository struct{}
 
 type landingPageRepositoryInterface interface {
-	InsertLandingPage(landingPage landing_page.LandingPage)
-	Update(landingPage landing_page.LandingPage)
+	InsertLandingPage(landingPage landing_page.LandingPage) error
+	Update(landingPage landing_page.LandingPage) error
 }
 
-func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.LandingPage) {
+func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.LandingPage) error {
 
+	landingPage.BrokersList = make([]brokers.Brokers, 0)
 	result, err := db.GetLandingPageCollection().InsertOne(context.TODO(), landingPage)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	fmt.Println(result)
+	return nil
 }
 
-func (lp *landingPageRepository) Update(landingPage landing_page.LandingPage) {
+func (lp *landingPageRepository) Update(landingPage landing_page.LandingPage) error {
 	idHex, _ := primitive.ObjectIDFromHex(landingPage.Id)
 	filter := bson.M{"_id": idHex}
 	update := bson.M{
@@ -42,7 +45,8 @@ func (lp *landingPageRepository) Update(landingPage landing_page.LandingPage) {
 			"field_image":       "image"}}
 	result, err := db.GetLandingPageCollection().UpdateOne(context.TODO(), filter, update)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	fmt.Println(result)
+	return nil
 }

@@ -1,6 +1,10 @@
 package landing_page
 
-import "github.com/LordRadamanthys/landing-page-manager/domain/brokers"
+import (
+	"time"
+
+	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
+)
 
 type LandingPage struct {
 	Id                string            `json:"id"`
@@ -12,6 +16,6 @@ type LandingPage struct {
 	Field_description string            `json:"fieldDescription"`
 	Field_image       string            `json:"fieldImage"`
 	Active            bool              `json:"active"`
-	Date_Created      bool              `json:"date_created"`
+	Date_Created      time.Time         `json:"date_created"`
 	BrokersList       []brokers.Brokers `json:"brokers"`
 }

@@ -11,17 +11,17 @@ var (
 
 type landinPageService struct{}
 type landinPageInterface interface {
-	Insert(landing_page.LandingPage)
-	Update(landing_page.LandingPage)
+	Insert(landing_page.LandingPage) error
+	Update(landing_page.LandingPage) error
 	Get(string)
 }
 
-func (lp *landinPageService) Insert(landingPage landing_page.LandingPage) {
-	repository.LandingPageRepository.InsertLandingPage(landingPage)
+func (lp *landinPageService) Insert(landingPage landing_page.LandingPage) error {
+	return repository.LandingPageRepository.InsertLandingPage(landingPage)
 }
 
-func (lp *landinPageService) Update(landingPage landing_page.LandingPage) {
-	repository.LandingPageRepository.Update(landingPage)
+func (lp *landinPageService) Update(landingPage landing_page.LandingPage) error {
+	return repository.LandingPageRepository.Update(landingPage)
 }
 
 func (lp *landinPageService) Get(id string) {

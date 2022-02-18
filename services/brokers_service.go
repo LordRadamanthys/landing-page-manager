@@ -12,24 +12,24 @@ var (
 
 type brokerService struct{}
 type brokerInterface interface {
-	Insert(string, brokers.Brokers)
-	Update(string, brokers.Brokers)
+	Insert(string, brokers.Brokers) error
+	Update(string, brokers.Brokers) error
 	Get(string, string)
-	GetTemplates(id string) *[]template.Template
+	GetTemplates(id string) (*[]template.Template, error)
 }
 
-func (b *brokerService) Insert(idLandiPage string, broker brokers.Brokers) {
-	repository.BrokerRepository.InsertBroker(idLandiPage, broker)
+func (b *brokerService) Insert(idLandiPage string, broker brokers.Brokers) error {
+	return repository.BrokerRepository.InsertBroker(idLandiPage, broker)
 }
 
-func (b *brokerService) Update(idLandiPage string, broker brokers.Brokers) {
-	repository.BrokerRepository.Update(idLandiPage, broker)
+func (b *brokerService) Update(idLandiPage string, broker brokers.Brokers) error {
+	return repository.BrokerRepository.Update(idLandiPage, broker)
 }
 
 func (b *brokerService) Get(idLandiPage string, idBroker string) {
 
 }
 
-func (b *brokerService) GetTemplates(id string) *[]template.Template {
+func (b *brokerService) GetTemplates(id string) (*[]template.Template, error) {
 	return repository.BrokerRepository.GetAllTemplates(id)
 }

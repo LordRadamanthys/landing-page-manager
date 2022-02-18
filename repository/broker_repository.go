@@ -18,12 +18,12 @@ var (
 type brokerRepository struct{}
 
 type brokerRepositoryInterface interface {
-	InsertBroker(string, brokers.Brokers)
-	Update(string, brokers.Brokers)
-	GetAllTemplates(string) *[]template.Template
+	InsertBroker(string, brokers.Brokers) error
+	Update(string, brokers.Brokers) error
+	GetAllTemplates(string) (*[]template.Template, error)
 }
 
-func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) {
+func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) error {
 	id, err := primitive.ObjectIDFromHex(idLP)
 	if err != nil {
 		panic(err)
@@ -31,18 +31,19 @@ func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) {
 	update := bson.M{"$push": bson.M{"brokerslist": broker}}
 	result, err := db.GetLandingPageCollection().UpdateByID(context.TODO(), id, update)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	if result.MatchedCount == 0 {
 		panic("id n encontrado")
 	}
 	fmt.Println(result)
 	fmt.Println(result.MatchedCount)
+	return nil
 }
 
-func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) {
+func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) error {
 	idHex, _ := primitive.ObjectIDFromHex(idLP)
-	filter := bson.M{"_id": idHex, "brokerslist.id": broker.Id}
+	filter := bson.M{"_id": idHex, "brokerslist.id": broker.Id_broker}
 	update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
 	result, err := db.GetLandingPageCollection().UpdateOne(context.TODO(), filter, update)
 	if err != nil {
@@ -50,9 +51,10 @@ func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) {
 	}
 
 	fmt.Println(result)
+	return nil
 }
 
-func (br *brokerRepository) GetAllTemplates(id string) *[]template.Template {
+func (br *brokerRepository) GetAllTemplates(id string) (*[]template.Template, error) {
 	filter := bson.M{"brokerslist.id": id}
 	// update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
 	cursor, err := db.GetLandingPageCollection().Find(context.TODO(), filter)
@@ -69,6 +71,6 @@ func (br *brokerRepository) GetAllTemplates(id string) *[]template.Template {
 
 		fmt.Println(result)
 	}
-	return &obj
+	return &obj, nil
 	// fmt.Println(result)
 }
