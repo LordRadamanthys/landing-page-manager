@@ -13,6 +13,7 @@ func loadUrls() {
 	router.GET("landingPage/broker/:id_broker/templates", controllers.BrokerController.GetTemplatesBroker)
 	router.PATCH("landingPage/broker/:id_template", controllers.BrokerController.UpdateBroker)
 	router.POST("landingPage/broker/", controllers.BrokerController.InsertBroker)
+	router.POST("landingPage/broker/upload", controllers.LandingPageController.UploadImage)
 }
 
 func pong(c *gin.Context) {
