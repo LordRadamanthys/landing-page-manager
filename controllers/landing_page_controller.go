@@ -13,6 +13,7 @@ type landingPageControllerInterface interface {
 	InsertLandingPage(*gin.Context)
 	Update(*gin.Context)
 	UploadImage(c *gin.Context)
+	GetTemplate(c *gin.Context)
 }
 
 type landingPageController struct{}
@@ -53,7 +54,24 @@ func (lp *landingPageController) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
+func (lp *landingPageController) GetTemplate(c *gin.Context) {
+	hash := c.Param("hash")
+
+	idLP, idBroker, err := base64_util.DecodeUrlLandingPage(hash)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	response, err := services.LandingPageService.Get(idLP, idBroker)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, response)
+}
+
 func (lp *landingPageController) UploadImage(c *gin.Context) {
+
 	file, _, err := c.Request.FormFile("image")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)

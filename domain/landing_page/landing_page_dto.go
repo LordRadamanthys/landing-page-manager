@@ -7,7 +7,7 @@ import (
 )
 
 type LandingPage struct {
-	Id                string            `json:"id"`
+	Id                string            `json:"_id"`
 	Id_mkt            int               `json:"id_mkt"`
 	Id_categoria      string            `json:"id_categoria"`
 	Title             string            `json:"title"`
@@ -17,5 +17,5 @@ type LandingPage struct {
 	Field_image       string            `json:"fieldImage"`
 	Active            bool              `json:"active"`
 	Date_Created      time.Time         `json:"date_created"`
-	BrokersList       []brokers.Brokers `json:"brokers"`
+	BrokersList       []brokers.Brokers `json:"brokerslist"`
 }

@@ -14,6 +14,8 @@ func loadUrls() {
 	router.PATCH("landingPage/broker/:id_template", controllers.BrokerController.UpdateBroker)
 	router.POST("landingPage/broker/", controllers.BrokerController.InsertBroker)
 	router.POST("landingPage/broker/upload", controllers.LandingPageController.UploadImage)
+
+	router.GET("landingPage/:hash", controllers.LandingPageController.GetTemplate)
 }
 
 func pong(c *gin.Context) {

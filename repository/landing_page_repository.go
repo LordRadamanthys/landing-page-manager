@@ -20,6 +20,7 @@ type landingPageRepository struct{}
 type landingPageRepositoryInterface interface {
 	InsertLandingPage(landingPage landing_page.LandingPage) error
 	Update(landingPage landing_page.LandingPage) error
+	GetTemplate(string, int) (*landing_page.LandingPage, error)
 }
 
 func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.LandingPage) error {
@@ -49,4 +50,19 @@ func (lp *landingPageRepository) Update(landingPage landing_page.LandingPage) er
 	}
 	fmt.Println(result)
 	return nil
+}
+
+func (lp *landingPageRepository) GetTemplate(idLP string, idBroker int) (*landing_page.LandingPage, error) {
+
+	objectIdLP, _ := primitive.ObjectIDFromHex(idLP)
+	fmt.Println(idLP, idBroker)
+	filter := bson.M{"brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}, "_id": objectIdLP}}
+	// filter := bson.M{"_id": objectIdLP, "brokerslist.id_broker": idBroker}
+	obj := db.GetLandingPageCollection().FindOne(context.TODO(), filter)
+
+	landingPage := &landing_page.LandingPage{}
+	obj.Decode(landingPage)
+	fmt.Println(landingPage)
+	return landingPage, nil
+	// fmt.Println(result)
 }

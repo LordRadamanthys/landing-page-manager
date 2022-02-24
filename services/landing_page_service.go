@@ -13,7 +13,7 @@ type landinPageService struct{}
 type landinPageInterface interface {
 	Insert(landing_page.LandingPage) error
 	Update(landing_page.LandingPage) error
-	Get(string)
+	Get(string, int) (*landing_page.LandingPage, error)
 }
 
 func (lp *landinPageService) Insert(landingPage landing_page.LandingPage) error {
@@ -24,6 +24,6 @@ func (lp *landinPageService) Update(landingPage landing_page.LandingPage) error 
 	return repository.LandingPageRepository.Update(landingPage)
 }
 
-func (lp *landinPageService) Get(id string) {
-
+func (lp *landinPageService) Get(idLP string, idBroker int) (*landing_page.LandingPage, error) {
+	return repository.LandingPageRepository.GetTemplate(idLP, idBroker)
 }

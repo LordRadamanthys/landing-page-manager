@@ -10,7 +10,11 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"strconv"
+	"strings"
 )
+
+const split_hash = "lp-lp"
 
 func ConvertImageToBase64(file multipart.File) (string, error) {
 	data, err := ioutil.ReadAll(file)
@@ -37,4 +41,17 @@ func ConvertImageToBase64(file multipart.File) (string, error) {
 		return "", errors.New("unsuported jpeg")
 	}
 	return base64.StdEncoding.EncodeToString(data), nil
+}
+
+func DecodeUrlLandingPage(hash string) (string, int, error) {
+
+	ids, err := base64.StdEncoding.DecodeString(hash)
+	if err != nil {
+		return "", 0, err
+	}
+
+	listIds := strings.Split(string(ids), split_hash)
+	idLp := listIds[0]
+	idBroker, _ := strconv.Atoi(listIds[1])
+	return idLp, idBroker, nil
 }
