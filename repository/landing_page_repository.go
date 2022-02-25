@@ -56,13 +56,17 @@ func (lp *landingPageRepository) GetTemplate(idLP string, idBroker int) (*landin
 
 	objectIdLP, _ := primitive.ObjectIDFromHex(idLP)
 	fmt.Println(idLP, idBroker)
-	filter := bson.M{"brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}, "_id": objectIdLP}}
-	// filter := bson.M{"_id": objectIdLP, "brokerslist.id_broker": idBroker}
+	filter := bson.M{"brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}, "_id": objectIdLP}
 	obj := db.GetLandingPageCollection().FindOne(context.TODO(), filter)
-
 	landingPage := &landing_page.LandingPage{}
 	obj.Decode(landingPage)
+	for _, broker := range landingPage.BrokersList {
+		if broker.Id_broker == idBroker {
+			landingPage.BrokersList = nil
+			landingPage.BrokersList = append(landingPage.BrokersList, broker)
+			break
+		}
+	}
 	fmt.Println(landingPage)
 	return landingPage, nil
-	// fmt.Println(result)
 }
