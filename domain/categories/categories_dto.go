@@ -1,6 +1,8 @@
 package categories
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type Categories struct {
-	Id    string `json:"_id"`
-	Title string `json:"title"`
+	Id    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Title string             `json:"title"`
 }

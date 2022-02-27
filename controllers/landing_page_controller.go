@@ -35,7 +35,7 @@ func (lp *landingPageController) InsertLandingPage(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, nil)
+	c.Status(http.StatusCreated)
 }
 
 func (lp *landingPageController) Update(c *gin.Context) {

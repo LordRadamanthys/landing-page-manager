@@ -25,7 +25,7 @@ type landingPageRepositoryInterface interface {
 
 func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.LandingPage) error {
 
-	landingPage.BrokersList = make([]brokers.Brokers, 0)
+	landingPage.Brokers_list = make([]brokers.Brokers, 0)
 	result, err := db.GetLandingPageCollection().InsertOne(context.TODO(), landingPage)
 	if err != nil {
 		return err
@@ -56,17 +56,19 @@ func (lp *landingPageRepository) GetTemplate(idLP string, idBroker int) (*landin
 
 	objectIdLP, _ := primitive.ObjectIDFromHex(idLP)
 	fmt.Println(idLP, idBroker)
-	filter := bson.M{"brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}, "_id": objectIdLP}
+	// filter := bson.M{"brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}, "_id": objectIdLP}
+	filter := bson.M{"_id": objectIdLP, "brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}}
 	obj := db.GetLandingPageCollection().FindOne(context.TODO(), filter)
 	landingPage := &landing_page.LandingPage{}
 	obj.Decode(landingPage)
-	for _, broker := range landingPage.BrokersList {
+	for _, broker := range landingPage.Brokers_list {
 		if broker.Id_broker == idBroker {
-			landingPage.BrokersList = nil
-			landingPage.BrokersList = append(landingPage.BrokersList, broker)
+			landingPage.Brokers_list = nil
+			landingPage.Brokers_list = append(landingPage.Brokers_list, broker)
 			break
 		}
 	}
+
 	fmt.Println(landingPage)
 	return landingPage, nil
 }

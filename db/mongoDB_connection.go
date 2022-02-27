@@ -20,3 +20,7 @@ func GetConnection() *mongo.Client {
 func GetLandingPageCollection() *mongo.Collection {
 	return GetConnection().Database("db_landing_page").Collection("lp_collection")
 }
+
+func GetCategoriesCollection() *mongo.Collection {
+	return GetConnection().Database("db_landing_page").Collection("categories_collection")
+}
