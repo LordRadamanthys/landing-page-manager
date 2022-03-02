@@ -21,6 +21,7 @@ var (
 )
 
 func (cat *categoriesController) Create(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	var category categories.Categories
 	if err := c.ShouldBindJSON(&category); err != nil {
 		c.JSON(http.StatusBadRequest, err)
@@ -35,6 +36,7 @@ func (cat *categoriesController) Create(c *gin.Context) {
 }
 
 func (cat *categoriesController) Get(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	id := c.Param("id")
 
 	category, err := services.CategoriesService.Get(id)

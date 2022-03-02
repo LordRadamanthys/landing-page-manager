@@ -21,15 +21,22 @@ var (
 )
 
 func (b *brokerController) InsertBroker(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	id_landingPage := c.GetHeader("id_landingPage")
 	var broker brokers.Brokers
-
+	if id_landingPage == "" {
+		c.JSON(http.StatusBadRequest, "missing header")
+		return
+	}
 	if err := c.ShouldBindJSON(&broker); err != nil {
 		c.JSON(http.StatusBadRequest, "invalid json body")
+		return
 	}
-	services.BrokerService.Insert("621f6edc19950530c43db8aa", broker)
+	services.BrokerService.Insert(id_landingPage, broker)
 }
 
 func (b *brokerController) GetTemplatesBroker(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	id_broker := c.Param("id_broker")
 	response, err := services.BrokerService.GetTemplates(id_broker)
 	if err != nil {
@@ -40,6 +47,7 @@ func (b *brokerController) GetTemplatesBroker(c *gin.Context) {
 }
 
 func (b *brokerController) UpdateBroker(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	var broker brokers.Brokers
 	id_lp := c.Param("id_template")
 	if err := c.ShouldBindJSON(&broker); err != nil {

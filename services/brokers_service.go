@@ -1,6 +1,8 @@
 package services
 
 import (
+	"strconv"
+
 	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
 	"github.com/LordRadamanthys/landing-page-manager/domain/template"
 	"github.com/LordRadamanthys/landing-page-manager/repository"
@@ -31,5 +33,6 @@ func (b *brokerService) Get(idLandiPage string, idBroker string) {
 }
 
 func (b *brokerService) GetTemplates(id string) (*[]template.Template, error) {
-	return repository.BrokerRepository.GetAllTemplates(id)
+	idConv, _ := strconv.ParseInt(id, 0, 0)
+	return repository.BrokerRepository.GetAllTemplates(int(idConv))
 }

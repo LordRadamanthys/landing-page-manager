@@ -20,7 +20,7 @@ type brokerRepository struct{}
 type brokerRepositoryInterface interface {
 	InsertBroker(string, brokers.Brokers) error
 	Update(string, brokers.Brokers) error
-	GetAllTemplates(string) (*[]template.Template, error)
+	GetAllTemplates(int) (*[]template.Template, error)
 }
 
 func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) error {
@@ -54,8 +54,8 @@ func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) error {
 	return nil
 }
 
-func (br *brokerRepository) GetAllTemplates(id string) (*[]template.Template, error) {
-	filter := bson.M{"brokers_list.id": id}
+func (br *brokerRepository) GetAllTemplates(id int) (*[]template.Template, error) {
+	filter := bson.M{"brokers_list.id_broker": id}
 	// update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
 	cursor, err := db.GetLandingPageCollection().Find(context.TODO(), filter)
 	if err != nil {

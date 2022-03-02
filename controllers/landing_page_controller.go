@@ -14,6 +14,7 @@ type landingPageControllerInterface interface {
 	Update(*gin.Context)
 	UploadImage(c *gin.Context)
 	GetTemplate(c *gin.Context)
+	ListAllLandingPages(c *gin.Context)
 }
 
 type landingPageController struct{}
@@ -23,6 +24,7 @@ var (
 )
 
 func (lp *landingPageController) InsertLandingPage(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	var landing landing_page.LandingPage
 
 	if err := c.ShouldBindJSON(&landing); err != nil {
@@ -39,6 +41,7 @@ func (lp *landingPageController) InsertLandingPage(c *gin.Context) {
 }
 
 func (lp *landingPageController) Update(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	var landing landing_page.LandingPage
 
 	if err := c.ShouldBindJSON(&landing); err != nil {
@@ -55,6 +58,7 @@ func (lp *landingPageController) Update(c *gin.Context) {
 }
 
 func (lp *landingPageController) GetTemplate(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	hash := c.Param("hash")
 
 	response, err := services.LandingPageService.Get(hash)
@@ -65,8 +69,12 @@ func (lp *landingPageController) GetTemplate(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (lp *landingPageController) UploadImage(c *gin.Context) {
+func (lp *landingPageController) ListAllLandingPages(c *gin.Context) {
 
+}
+
+func (lp *landingPageController) UploadImage(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	file, _, err := c.Request.FormFile("image")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
