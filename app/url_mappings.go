@@ -17,6 +17,7 @@ func loadUrls() {
 
 	router.GET("landingPage/:hash", controllers.LandingPageController.GetTemplate)
 	router.POST("landingPage", controllers.LandingPageController.InsertLandingPage)
+	router.GET("landingPage", controllers.LandingPageController.ListAllLandingPages)
 
 	router.POST("categories", controllers.CategoriesController.Create)
 	router.GET("categories/:id", controllers.CategoriesController.Get)

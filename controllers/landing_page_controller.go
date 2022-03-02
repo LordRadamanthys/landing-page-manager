@@ -19,12 +19,16 @@ type landingPageControllerInterface interface {
 
 type landingPageController struct{}
 
+const (
+	access_control_allow_origin = "Access-Control-Allow-Origin"
+)
+
 var (
 	LandingPageController landingPageControllerInterface = &landingPageController{}
 )
 
 func (lp *landingPageController) InsertLandingPage(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set(access_control_allow_origin, "*")
 	var landing landing_page.LandingPage
 
 	if err := c.ShouldBindJSON(&landing); err != nil {
@@ -41,7 +45,7 @@ func (lp *landingPageController) InsertLandingPage(c *gin.Context) {
 }
 
 func (lp *landingPageController) Update(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set(access_control_allow_origin, "*")
 	var landing landing_page.LandingPage
 
 	if err := c.ShouldBindJSON(&landing); err != nil {
@@ -58,7 +62,7 @@ func (lp *landingPageController) Update(c *gin.Context) {
 }
 
 func (lp *landingPageController) GetTemplate(c *gin.Context) {
-	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Set(access_control_allow_origin, "*")
 	hash := c.Param("hash")
 
 	response, err := services.LandingPageService.Get(hash)
@@ -70,7 +74,13 @@ func (lp *landingPageController) GetTemplate(c *gin.Context) {
 }
 
 func (lp *landingPageController) ListAllLandingPages(c *gin.Context) {
-
+	c.Writer.Header().Set(access_control_allow_origin, "*")
+	response, err := services.LandingPageService.ListAllLandingPages()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	c.JSON(http.StatusOK, response)
 }
 
 func (lp *landingPageController) UploadImage(c *gin.Context) {

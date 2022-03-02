@@ -6,6 +6,7 @@ import (
 
 	"github.com/LordRadamanthys/landing-page-manager/db"
 	"github.com/LordRadamanthys/landing-page-manager/domain/landing_page"
+	"github.com/LordRadamanthys/landing-page-manager/domain/template"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -20,6 +21,7 @@ type landingPageRepositoryInterface interface {
 	InsertLandingPage(landingPage landing_page.LandingPage) error
 	Update(landingPage landing_page.LandingPage) error
 	GetTemplate(string, int) (*landing_page.LandingPage, error)
+	ListAllLandingPages() (*[]template.Template, error)
 }
 
 func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.LandingPage) error {
@@ -68,4 +70,18 @@ func (lp *landingPageRepository) GetTemplate(idLP string, idBroker int) (*landin
 		}
 	}
 	return landingPage, nil
+}
+
+func (lp *landingPageRepository) ListAllLandingPages() (*[]template.Template, error) {
+	list, err := db.GetLandingPageCollection().Find(context.TODO(), bson.D{{}})
+
+	if err != nil {
+		return nil, err
+	}
+	var obj []template.Template
+	// check for errors in the conversion
+	if err = list.All(context.TODO(), &obj); err != nil {
+		panic(err)
+	}
+	return &obj, nil
 }
