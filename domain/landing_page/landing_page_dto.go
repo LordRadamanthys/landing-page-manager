@@ -1,8 +1,6 @@
 package landing_page
 
 import (
-	"time"
-
 	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -17,6 +15,6 @@ type LandingPage struct {
 	Field_description string             `json:"field_description"`
 	Field_image       string             `json:"field_image"`
 	Active            bool               `json:"active"`
-	Date_Created      time.Time          `json:"date_created"`
+	Date_Created      string             `json:"date_created"`
 	Brokers_list      []brokers.Brokers  `json:"brokers_list"`
 }

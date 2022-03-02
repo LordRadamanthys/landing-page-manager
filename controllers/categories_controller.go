@@ -46,7 +46,7 @@ func (cat *categoriesController) Get(c *gin.Context) {
 }
 
 func (cat *categoriesController) GetAll(c *gin.Context) {
-
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	categories, err := services.CategoriesService.GetAll()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)

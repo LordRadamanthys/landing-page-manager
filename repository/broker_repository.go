@@ -28,7 +28,7 @@ func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) er
 	if err != nil {
 		panic(err)
 	}
-	update := bson.M{"$push": bson.M{"brokerslist": broker}}
+	update := bson.M{"$push": bson.M{"brokers_list": broker}}
 	result, err := db.GetLandingPageCollection().UpdateByID(context.TODO(), id, update)
 	if err != nil {
 		return err
@@ -43,8 +43,8 @@ func (br *brokerRepository) InsertBroker(idLP string, broker brokers.Brokers) er
 
 func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) error {
 	idHex, _ := primitive.ObjectIDFromHex(idLP)
-	filter := bson.M{"_id": idHex, "brokerslist.id": broker.Id_broker}
-	update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
+	filter := bson.M{"_id": idHex, "brokers_list.id": broker.Id_broker}
+	update := bson.M{"$set": bson.M{"brokers_list.$": broker}}
 	result, err := db.GetLandingPageCollection().UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		panic(err)
@@ -55,7 +55,7 @@ func (br *brokerRepository) Update(idLP string, broker brokers.Brokers) error {
 }
 
 func (br *brokerRepository) GetAllTemplates(id string) (*[]template.Template, error) {
-	filter := bson.M{"brokerslist.id": id}
+	filter := bson.M{"brokers_list.id": id}
 	// update := bson.M{"$set": bson.M{"brokerslist.$": broker}}
 	cursor, err := db.GetLandingPageCollection().Find(context.TODO(), filter)
 	if err != nil {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/LordRadamanthys/landing-page-manager/db"
-	"github.com/LordRadamanthys/landing-page-manager/domain/brokers"
 	"github.com/LordRadamanthys/landing-page-manager/domain/landing_page"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -25,7 +24,6 @@ type landingPageRepositoryInterface interface {
 
 func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.LandingPage) error {
 
-	landingPage.Brokers_list = make([]brokers.Brokers, 0)
 	result, err := db.GetLandingPageCollection().InsertOne(context.TODO(), landingPage)
 	if err != nil {
 		return err
@@ -35,15 +33,17 @@ func (lp *landingPageRepository) InsertLandingPage(landingPage landing_page.Land
 }
 
 func (lp *landingPageRepository) Update(landingPage landing_page.LandingPage) error {
-	idHex, _ := primitive.ObjectIDFromHex(landingPage.Id)
+	idHex, _ := primitive.ObjectIDFromHex(landingPage.Id.String())
 	filter := bson.M{"_id": idHex}
 	update := bson.M{
 		"$set": bson.M{
-			"title":             "Carnaval",
-			"template":          "1",
-			"field_title":       "teste",
-			"field_description": "test",
-			"field_image":       "image"}}
+			"title":             landingPage.Title,
+			"template":          landingPage.Template,
+			"field_title":       landingPage.Field_title,
+			"field_description": landingPage.Field_description,
+			"field_image":       landingPage.Field_image,
+			"active":            landingPage.Active,
+		}}
 	result, err := db.GetLandingPageCollection().UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return err
@@ -56,8 +56,7 @@ func (lp *landingPageRepository) GetTemplate(idLP string, idBroker int) (*landin
 
 	objectIdLP, _ := primitive.ObjectIDFromHex(idLP)
 	fmt.Println(idLP, idBroker)
-	// filter := bson.M{"brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}, "_id": objectIdLP}
-	filter := bson.M{"_id": objectIdLP, "brokerslist": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}}
+	filter := bson.M{"brokers_list": bson.M{"$elemMatch": bson.M{"id_broker": idBroker}}, "_id": objectIdLP}
 	obj := db.GetLandingPageCollection().FindOne(context.TODO(), filter)
 	landingPage := &landing_page.LandingPage{}
 	obj.Decode(landingPage)
@@ -68,7 +67,5 @@ func (lp *landingPageRepository) GetTemplate(idLP string, idBroker int) (*landin
 			break
 		}
 	}
-
-	fmt.Println(landingPage)
 	return landingPage, nil
 }

@@ -26,7 +26,7 @@ func (b *brokerController) InsertBroker(c *gin.Context) {
 	if err := c.ShouldBindJSON(&broker); err != nil {
 		c.JSON(http.StatusBadRequest, "invalid json body")
 	}
-	services.BrokerService.Insert("", broker)
+	services.BrokerService.Insert("621f6edc19950530c43db8aa", broker)
 }
 
 func (b *brokerController) GetTemplatesBroker(c *gin.Context) {

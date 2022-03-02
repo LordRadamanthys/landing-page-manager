@@ -57,12 +57,7 @@ func (lp *landingPageController) Update(c *gin.Context) {
 func (lp *landingPageController) GetTemplate(c *gin.Context) {
 	hash := c.Param("hash")
 
-	idLP, idBroker, err := base64_util.DecodeUrlLandingPage(hash)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
-		return
-	}
-	response, err := services.LandingPageService.Get(idLP, idBroker)
+	response, err := services.LandingPageService.Get(hash)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
